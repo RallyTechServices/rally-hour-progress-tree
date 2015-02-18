@@ -3,6 +3,8 @@ Ext.define('CustomApp', {
     componentCls: 'app',
     logger: new Rally.technicalservices.Logger(),
     autoScroll: false,
+    kanbanFieldName: 'c_KanbanState',
+    kanbanStates: [],
     items: [
         {xtype:'container',itemId:'selector_box', layout: {type:'hbox'},  margin: 5, height: 50},
         {xtype:'container',itemId:'display_box'},
@@ -15,14 +17,27 @@ Ext.define('CustomApp', {
             scope: this,
             success:function(models){
                 this.models = models;
-                this._addSelectors(this.down('#selector_box'));
+                var story_model = models['hierarchicalrequirement'];
+                var kanban_state_field = story_model.getField(this.kanbanFieldName);
+                this.kanbanStates = [];
+                kanban_state_field.getAllowedValueStore().load({
+                    fetch: ['StringValue'],
+                    scope: this,
+                    callback: function(values) {
+                        Ext.Array.each(values, function(value) {
+                            this.kanbanStates.push(value.get('StringValue'));
+                        },this);
+                        //
+                        this._addSelectors(this.down('#selector_box'));
+                    }
+                });
+                
             },
             failure: function(error_msg){
                 alert(error_msg);
                 this.setLoading(false);
             }
         });
-
     },
     _getAvailableTreeHeight: function() {
         var body_height = this.getHeight() || Ext.getBody().getHeight();
@@ -161,6 +176,27 @@ Ext.define('CustomApp', {
                 }
             },
             {
+                text: 'Story State',
+                dataIndex: 'ScheduleState'
+            },
+            {
+                text: 'Story Kanban State',
+                dataIndex: me.kanbanFieldName
+            },
+            {
+                text: 'Story Count',
+                dataIndex: '__story_count',
+                menuDisabled: true,
+                leavesOnly: true,
+                calculator: function(item) {
+                    if ( item.get('_type') == 'hierarchicalrequirement' && item.get('DirectChildrenCount') == 0 ) {
+                        return 1;
+                    }
+                    return 0;
+                },
+                otherFields: ['DirectChildrenCount']
+            },
+            {
                 text: 'Progress',
                 dataIndex: 'Progress',
                 menuDisabled: true,
@@ -168,6 +204,28 @@ Ext.define('CustomApp', {
                     return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
                         numeratorField: 'ToDo',
                         denominatorField: 'Estimate',
+                        opposite: true
+                    }).apply(item.getData());
+                }
+            },
+            {
+                text: 'Stories Dev Complete',
+                dataIndex: '__story_dev_complete_count',
+                menuDisabled: true,
+                leavesOnly: true,
+                calculator: function(item) {
+                    if ( item.get('_type') == 'hierarchicalrequirement' && item.get('DirectChildrenCount') == 0 ) {
+                        if ( Ext.Array.indexOf(me.kanbanStates,item.get(me.kanbanFieldName)) >= Ext.Array.indexOf(me.kanbanStates, "Ready for Test") ) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                },
+                otherFields: ['DirectChildrenCount'],
+                renderer: function(value,meta_data,item) {
+                    return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
+                        numeratorField: '__story_dev_complete_count',
+                        denominatorField: '__story_count',
                         opposite: true
                     }).apply(item.getData());
                 }

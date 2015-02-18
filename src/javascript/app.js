@@ -225,8 +225,28 @@ Ext.define('CustomApp', {
                 renderer: function(value,meta_data,item) {
                     return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
                         numeratorField: '__story_dev_complete_count',
-                        denominatorField: '__story_count',
-                        opposite: true
+                        denominatorField: '__story_count'
+                    }).apply(item.getData());
+                }
+            },
+            {
+                text: 'Stories Test Complete',
+                dataIndex: '__story_test_complete_count',
+                menuDisabled: true,
+                leavesOnly: true,
+                calculator: function(item) {
+                    if ( item.get('_type') == 'hierarchicalrequirement' && item.get('DirectChildrenCount') == 0 ) {
+                        if ( Ext.Array.indexOf(me.kanbanStates,item.get(me.kanbanFieldName)) >= Ext.Array.indexOf(me.kanbanStates, "Complete") ) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                },
+                otherFields: ['DirectChildrenCount'],
+                renderer: function(value,meta_data,item) {
+                    return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
+                        numeratorField: '__story_test_complete_count',
+                        denominatorField: '__story_count'
                     }).apply(item.getData());
                 }
             }

@@ -15,3 +15,10 @@
     margin-right: 5px;
     cursor: pointer;
 }
+
+.x-tree-panel.rally-grid .x-grid-body .x-grid-row .x-grid-cell .x-grid-cell-inner
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 25px;
+}

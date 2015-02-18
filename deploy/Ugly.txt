@@ -3,10 +3,10 @@
 <head>
     <title>Progress by Hours</title>
     <!--  (c) 2015 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Mon Feb 16 2015 19:08:37 GMT-0800 (PST) -->
+    <!--  Build Date: Wed Feb 18 2015 14:29:10 GMT-0800 (PST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Mon Feb 16 2015 19:08:37 GMT-0800 (PST)";
+        var APP_BUILD_DATE = "Wed Feb 18 2015 14:29:10 GMT-0800 (PST)";
         var CHECKSUM = [%= checksum %];
     </script>
     
@@ -40,6 +40,13 @@
     margin-top: 25px;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.x-tree-panel.rally-grid .x-grid-body .x-grid-row .x-grid-cell .x-grid-cell-inner
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 25px;
 }
     </style>
 

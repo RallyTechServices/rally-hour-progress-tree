@@ -16,7 +16,6 @@ Ext.define('CustomApp', {
             success:function(models){
                 this.models = models;
                 this._addSelectors(this.down('#selector_box'));
-                // this._addTree();
             },
             failure: function(error_msg){
                 alert(error_msg);

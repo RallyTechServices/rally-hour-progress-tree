@@ -49,7 +49,7 @@ Ext.define('Rally.technicalservices.ProgressBarTemplate', {
                 percentDone = numerator / denominator;
             }
                 
-            var color = '#cff';
+            var color = '#9cf';
 //            var start_date = recordData['PlannedStartDate'] ;
 //            if ( start_date === null ) { 
 //                start_date = new Date();

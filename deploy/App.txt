@@ -3,11 +3,11 @@
 <head>
     <title>Progress by Hours</title>
     <!--  (c) 2015 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Mon Feb 16 2015 19:08:36 GMT-0800 (PST) -->
+    <!--  Build Date: Wed Feb 18 2015 14:29:10 GMT-0800 (PST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Mon Feb 16 2015 19:08:36 GMT-0800 (PST)";
-        var CHECKSUM = 48994875269;
+        var APP_BUILD_DATE = "Wed Feb 18 2015 14:29:10 GMT-0800 (PST)";
+        var CHECKSUM = 49231362585;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc3/sdk.js"></script>
@@ -998,6 +998,11 @@ Ext.define('Rally.technicalservices.ProgressBarTemplate', {
          */
         denominatorField: 'percentDone',
         /**
+         * 
+         * @return {Boolean} opposite true if the numerator is remaining instead of done
+         */
+        opposite: false,
+        /**
          * @cfg {Function} showDangerNotificationFn A function that should return true to show a triangle in the top right to denote something is missing.
          * Defaults to:
          *      function(){ return false; }
@@ -1020,7 +1025,7 @@ Ext.define('Rally.technicalservices.ProgressBarTemplate', {
                 percentDone = numerator / denominator;
             }
                 
-            var color = '#cff';
+            var color = '#9cf';
 //            var start_date = recordData['PlannedStartDate'] ;
 //            if ( start_date === null ) { 
 //                start_date = new Date();
@@ -1103,6 +1108,9 @@ Ext.define('Rally.technicalservices.ProgressBarTemplate', {
                     if ( denominator > 0 ) {
                         percentDone = numerator / denominator;
                     }
+                    if ( config.opposite ) {
+                        percentDone = 1-percentDone;
+                    }
                     return Math.round(percentDone * 100);
                 },
                 generateLabelText: config.generateLabelTextFn,
@@ -1141,7 +1149,6 @@ Ext.define('CustomApp', {
             success:function(models){
                 this.models = models;
                 this._addSelectors(this.down('#selector_box'));
-                // this._addTree();
             },
             failure: function(error_msg){
                 alert(error_msg);
@@ -1293,15 +1300,9 @@ Ext.define('CustomApp', {
                 renderer: function(value,meta_data,item) {
                     return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
                         numeratorField: 'ToDo',
-                        denominatorField: 'Estimate'
-                    }).apply(record.getData());
-                        
-//                    var orig_todo = item.get('ToDo') || 0;
-//                    var orig_estimate = item.get('Estimate') || 0;
-//                    if ( orig_estimate == 0 ) {
-//                        return "";
-//                    }
-//                    return Ext.util.Format.number( 100*(orig_estimate-orig_todo) / orig_estimate, '0.0');
+                        denominatorField: 'Estimate',
+                        opposite: true
+                    }).apply(item.getData());
                 }
             }
         ];
@@ -1446,6 +1447,13 @@ Ext.define('CustomApp', {
     margin-top: 25px;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.x-tree-panel.rally-grid .x-grid-body .x-grid-row .x-grid-cell .x-grid-cell-inner
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 25px;
 }
     </style>
 

@@ -180,16 +180,19 @@ Ext.define('CustomApp', {
             {
                 text: 'Story State',
                 menuDisabled: true,
+                hidden: true,
                 dataIndex: 'ScheduleState'
             },
             {
                 text: 'Story Kanban State',
+                hidden: true,
                 menuDisabled: true,
                 dataIndex: me.kanbanFieldName
             },
             {
                 text: 'Story Count',
                 dataIndex: '__story_count',
+                hidden: true,
                 menuDisabled: true,
                 leavesOnly: true,
                 calculator: function(item) {

@@ -150,11 +150,13 @@ Ext.define('CustomApp', {
             { 
                 text: "Planned Start",
                 dataIndex: "PlannedStartDate",
+                menuDisabled: true,
                 renderer: Ext.util.Format.dateRenderer("d/m")
             },
             { 
                 text: "Planned End",
                 dataIndex: "PlannedEndDate",
+                menuDisabled: true,
                 renderer: Ext.util.Format.dateRenderer("d/m")
             },
             {
@@ -177,10 +179,12 @@ Ext.define('CustomApp', {
             },
             {
                 text: 'Story State',
+                menuDisabled: true,
                 dataIndex: 'ScheduleState'
             },
             {
                 text: 'Story Kanban State',
+                menuDisabled: true,
                 dataIndex: me.kanbanFieldName
             },
             {

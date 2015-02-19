@@ -3,11 +3,11 @@
 <head>
     <title>Progress by Hours</title>
     <!--  (c) 2015 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Wed Feb 18 2015 16:01:47 GMT-0800 (PST) -->
+    <!--  Build Date: Wed Feb 18 2015 16:11:05 GMT-0800 (PST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Wed Feb 18 2015 16:01:47 GMT-0800 (PST)";
-        var CHECKSUM = 57112845928;
+        var APP_BUILD_DATE = "Wed Feb 18 2015 16:11:05 GMT-0800 (PST)";
+        var CHECKSUM = 57443390637;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc3/sdk.js"></script>
@@ -912,7 +912,8 @@ Ext.define('Rally.technicalservices.util.TreeBuilding', {
                 store: tree_store,
                 cls: 'rally-grid',
                 rootVisible: false,
-                enableColumnMove: true,
+                enableColumnMove: false,
+                enableColumnResize: false,
                 sortableColumns: false,
                 rowLines: true,
                 height: this.height,
@@ -1283,11 +1284,13 @@ Ext.define('CustomApp', {
             { 
                 text: "Planned Start",
                 dataIndex: "PlannedStartDate",
+                menuDisabled: true,
                 renderer: Ext.util.Format.dateRenderer("d/m")
             },
             { 
                 text: "Planned End",
                 dataIndex: "PlannedEndDate",
+                menuDisabled: true,
                 renderer: Ext.util.Format.dateRenderer("d/m")
             },
             {
@@ -1310,10 +1313,12 @@ Ext.define('CustomApp', {
             },
             {
                 text: 'Story State',
+                menuDisabled: true,
                 dataIndex: 'ScheduleState'
             },
             {
                 text: 'Story Kanban State',
+                menuDisabled: true,
                 dataIndex: me.kanbanFieldName
             },
             {

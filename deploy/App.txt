@@ -3,11 +3,11 @@
 <head>
     <title>Progress by Hours</title>
     <!--  (c) 2015 Rally Software Development Corp.  All Rights Reserved. -->
-    <!--  Build Date: Wed Feb 18 2015 16:37:40 GMT-0800 (PST) -->
+    <!--  Build Date: Wed Feb 18 2015 16:42:16 GMT-0800 (PST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Wed Feb 18 2015 16:37:40 GMT-0800 (PST)";
-        var CHECKSUM = 63756597016;
+        var APP_BUILD_DATE = "Wed Feb 18 2015 16:42:16 GMT-0800 (PST)";
+        var CHECKSUM = 64041635105;
     </script>
     
     <script type="text/javascript" src="/apps/2.0rc3/sdk.js"></script>
@@ -1142,7 +1142,7 @@ Ext.define('CustomApp', {
     items: [
         {xtype:'container',itemId:'selector_box', layout: {type:'hbox'},  margin: 5, height: 50},
         {xtype:'container',itemId:'display_box'},
-        {xtype:'tsinfolink', height: 10}
+        {xtype:'tsinfolink', height: 10, informationHtml: 'Progress is calculated as (estimate-todo) as a percentage of estimate' }
     ],
     field_names: ['ObjectID','FormattedID','Name','Parent','PortfolioItem'],
 

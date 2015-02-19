@@ -8,7 +8,7 @@ Ext.define('CustomApp', {
     items: [
         {xtype:'container',itemId:'selector_box', layout: {type:'hbox'},  margin: 5, height: 50},
         {xtype:'container',itemId:'display_box'},
-        {xtype:'tsinfolink', height: 10}
+        {xtype:'tsinfolink', height: 10, informationHtml: 'Progress is calculated as (estimate-todo) as a percentage of estimate' }
     ],
     field_names: ['ObjectID','FormattedID','Name','Parent','PortfolioItem'],
 

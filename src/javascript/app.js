@@ -86,6 +86,67 @@ Ext.define('CustomApp', {
         var model_names = Ext.Object.getKeys(this.models);
         var me = this;
         this._addReleaseBox(container);
+                /**
+         * So, the 'change' event when you try to use type-ahead in the
+         * field picker and we don't want that to redraw the tree.  But
+         * we want the 'change' event because it is fired when we try to
+         * remember fields that were selected in the past and we definitely 
+         * want that value.
+         */
+        this.react_to_change = true;
+        
+        var field_picker = container.add({
+            xtype:'rallyfieldpicker',
+            autoExpand:true,
+            margin: 10,
+            alwaysExpanded: false,
+            fieldLabel: 'Add Columns:',
+            labelWidth: 75,
+            modelTypes:model_names,
+            useColumnHeaderLabels: true,
+            stateful: true,
+            stateId: 'rally.techservices.tree.insideout.fields',
+            stateEvents:['blur','selectionchange'],
+            getState: function() {
+                var value_array = [];
+                Ext.Array.each(this.getValue(), function(value){
+                    value_array.push(value.get('name'));
+                });
+                
+                return this.addPropertyToState({},'value',value_array);
+            },
+            listeners: {
+                scope: this,
+                blur: function(picker){
+                    this.logger.log("BLUR fields", picker.isExpanded);
+                    var additional_columns = picker.getValue() || [];
+                    this.logger.log("Changing picker from ", this.additional_columns, " to ", additional_columns);
+                    if ( this._fieldArraysAreDifferent(this.additional_columns,additional_columns) ) {
+                        this.additional_columns = additional_columns;
+                        picker.collapse();
+                        this._addTree();
+                    }
+                },
+                change: function(picker) {
+                    this.logger.log('CHANGE fields');
+                    this.additional_columns = picker.getValue() || [];
+                    picker.collapse();
+                    if ( this.additional_columns.length > 0 && this.react_to_change ) {
+                        this.react_to_change = false;
+                        this._addTree();
+                    }
+                },
+                selectionchange: function() {
+                    this.logger.log('SELECTION CHANGE fields');
+                },
+                datachanged: function() {
+                    this.logger.log('DATA CHANGED fields');
+                }
+            }
+        });
+        field_picker.on('expand',function(picker){picker.collapse();},this,{single:true});
+        
+        
     },
     _addReleaseBox: function(container) {
         container.add({
@@ -151,13 +212,17 @@ Ext.define('CustomApp', {
                 text: "Planned Start",
                 dataIndex: "PlannedStartDate",
                 menuDisabled: true,
-                renderer: Ext.util.Format.dateRenderer("d/m")
+                renderer:function(value,meta_data,record){
+                    return me._magicRenderer({name:'PlannedStartDate'},value,meta_data,record) || "";
+                }
             },
             { 
                 text: "Planned End",
                 dataIndex: "PlannedEndDate",
                 menuDisabled: true,
-                renderer: Ext.util.Format.dateRenderer("d/m")
+                renderer:function(value,meta_data,record){
+                    return me._magicRenderer({name:'PlannedEndDate'},value,meta_data,record) || "";
+                }            
             },
             {
                 text: 'Estimate',
@@ -280,17 +345,23 @@ Ext.define('CustomApp', {
             }
         ];
         
+        var base_column_names = [];
+        Ext.Array.each(columns, function(column) {
+            base_column_names.push(column.dataIndex);
+        });
+        
         if ( this.additional_columns ) {
-            this.logger.log("Additional fields: ", this.additional_columns);
             Ext.Array.each(this.additional_columns, function(field) {
-                columns.push({
-                    text:field.get('displayName').replace(/\(.*\)/,""),
-                    dataIndex:field.get('name'),
-                    menuDisabled: true,
-                    renderer:function(value,meta_data,record){
-                        return me._magicRenderer(field,value,meta_data,record) || "";
-                    }
-                });
+                if ( Ext.Array.indexOf(base_column_names,field.get('name')) == -1 ) {
+                    columns.push({
+                        text:field.get('displayName').replace(/\(.*\)/,""),
+                        dataIndex:field.get('name'),
+                        menuDisabled: true,
+                        renderer:function(value,meta_data,record){
+                            return me._magicRenderer(field,value,meta_data,record) || "";
+                        }
+                    });
+                }
             });
         }
         return columns;

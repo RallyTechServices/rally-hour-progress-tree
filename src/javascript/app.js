@@ -221,7 +221,7 @@ Ext.define('CustomApp', {
                     }
                     return 0;
                 },
-                otherFields: ['DirectChildrenCount'],
+                otherFields: ['DirectChildrenCount',me.kanbanFieldName],
                 renderer: function(value,meta_data,item) {
                     return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
                         numeratorField: '__story_dev_complete_count',
@@ -242,10 +242,31 @@ Ext.define('CustomApp', {
                     }
                     return 0;
                 },
-                otherFields: ['DirectChildrenCount'],
+                otherFields: ['DirectChildrenCount',me.kanbanFieldName],
                 renderer: function(value,meta_data,item) {
                     return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
                         numeratorField: '__story_test_complete_count',
+                        denominatorField: '__story_count'
+                    }).apply(item.getData());
+                }
+            },
+            {
+                text: 'Stories Accepted',
+                dataIndex: '__story_accepted_count',
+                menuDisabled: true,
+                leavesOnly: true,
+                calculator: function(item) {
+                    if ( item.get('_type') == 'hierarchicalrequirement' && item.get('DirectChildrenCount') == 0 ) {
+                        if ( item.get('ScheduleState') == "Accepted" ) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                },
+                otherFields: ['DirectChildrenCount','ScheduleState'],
+                renderer: function(value,meta_data,item) {
+                    return Ext.create('Rally.technicalservices.ProgressBarTemplate',{
+                        numeratorField: '__story_accepted_count',
                         denominatorField: '__story_count'
                     }).apply(item.getData());
                 }
